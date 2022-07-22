@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+#board {
+  /* position: sticky; */
+  top: 1em;
+  width: 50vw;
+  height: 50vw;
+  min-width: 300px;
+  min-height: 300px;
+  max-width: calc(100vh - 2em);
+  max-height: calc(100vh - 2em);
+  overflow: hidden;
+  border: 12px solid #000;
+  border-radius: 12px;
+}
+
+#garden,
+#plants,
+#soil,
+#overlay {
+  display: grid;
+  grid-template-rows: 25% 25% 25% 25%;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#plants {
+  z-index: 30;
+}
+
+#soil {
+  background-color: #ccc;
+  overflow: hidden;
+}
+#soil .plot
+{
+    text-align: center;
+    padding-top:10vh;
+    font-size:2em;
+    /* padding-bottom:5vh; */
+}
+.plot-1
+{
+    color:green;
+}
+.plot-2
+{
+    color:blue;
+}
+.plot-3
+{
+    color:red;
+}
+.plot {
+  width: 100%;
+  height: 100%;
+  background-color: #222;
+  /* background-color: #836B32; */
+  /* background-image: url('../images/dirt.svg'); */
+  background-size: calc(10vw - 4px);
+}
+
+#overlay .plot {
+  z-index: 50;
+  background: none;
+  box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.05), inset -2px -2px 0 #444;
+}
+
+#garden {
+  z-index: 20;
+}
+
+.plant,
+.treatment {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.plant .bg,
+.treatment .bg {
+  width: 100%;
+  height: 100%;
+  background-position: left top;
+  background-size: calc(10vw - 4px);
+}
+
+.plant.carrot .bg {
+  background-image: url("../images/carrots.svg");
+}
+
+.plant.weed .bg {
+  background-image: url("../images/weeds.svg");
+}
+
+.plant.carrot.correct .bg {
+  background-image: url("../images/carrots-correct.svg");
+}
+
+.plant.weed.correct .bg {
+  background-image: url("../images/weeds-correct.svg");
+}
+
+.treatment.carrot .bg {
+  background-color: rgba(81, 140, 179, 1);
+  background-image: url("../images/water.svg");
+  animation: scroll 6s linear infinite;
+}
+
+.treatment.weed .bg {
+  background-color: #63393E;
+  background-image: url("../images/poison.svg");
+  animation: scroll 6s linear infinite;
+}
+
+#overlay.win:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 18%;
+  left: 41%;
+  width: 8%;
+  height: 8%;
+  background-image: url("../images/froggy.svg");
+  background-size: 100% 100%;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  z-index: 110;
+  animation: bounce 2s linear infinite;
+}
+
+#overlay.win:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("../images/carrots-win.png");
+  background-size: 100% 100%;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  z-index: 100;
+}
+
+#garden.win {
+  display: none;
+}
+
+.grid-column-start-1 {
+  grid-column-start: 1;
+}
+
+.grid-column-start-2 {
+  grid-column-start: 2;
+}
+
+.grid-column-start-5 {
+  grid-column-start: 5;
+}
+
+.grid-column-end-6 {
+  grid-column-end: 6;
+}
+
+.grid-column-4 {
+  grid-column: 4;
+  grid-row: 1 / 6;
+}
+
+.grid-template-columns-repeat-8-12 {
+  grid-template-columns: repeat(8, 12.5%) !important;
+}
+
+.grid-template-columns-100px-3em-40p {
+  grid-template-columns: 100px 3em 40% !important;
+}
+
+.grid-template-columns-1fr-5fr {
+  grid-template-columns: 1fr 5fr !important;
+}
+
+.grid-template-columns-75px-2fr-1fr {
+  grid-template-columns: 75px 2fr 1fr !important;
+}
+
+.grid-template-columns-50px-1fr-1fr-1fr-50px {
+  grid-template-columns: 50px 1fr 1fr 1fr 50px !important;
+}
+
+.grid-template-rows-50px-0-0-0-1fr {
+  grid-template-rows: 50px 0 0 0 1fr !important;
+}
+
+.grid-template-rows-100p {
+  grid-template-rows: 100% !important;
+}
+
+.grid-template-columns-6 {
+  grid-template-columns: 75px 3fr 2fr !important;
+  grid-template-rows: 100% !important;
+}
+
+.grid-area-1-1-6-2 {
+  grid-area: 1 / 1 / 6 / 2;
+}
+
+.grid-area-5-1-6-6 {
+  grid-area: 5 / 1 / 6 / 6;
+}
+
+.grid-area-1-5-6-6 {
+  grid-area: 1 / 5 / 6 / 6;
+}
+
+.grid-template-2 {
+  grid-template: 1fr 50px / 20% 1fr !important;
+}
+
+@keyframes scroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 calc(10vw - 4px); }
+}
+
+@media only screen and (max-width: 767px) {
+  body {
+    flex-direction: column-reverse;
+    align-items: center;
+    min-width: 100vw;
+  }
+
+  body,
+  #sidebar {
+    font-size: 13px;
+  }
+
+  #sidebar {
+    width: 100%;
+  }
+
+  #view {
+    position: relative;
+    min-height: 0;
+  }
+
+  .header {
+    justify-content: center;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  #labelFooter {
+    display: none;
+  }
+}
+
+
+/* Native Ads */
+#custom-inline * {
+  margin: initial;
+  padding: initial;
+}
+
+#custom-inline #_custom_ {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 2em 0 .5em;
+  padding: 8px 18px 8px 0;
+  border-radius: 4px;
+  background-color: hsla(0, 0%, 0%, .1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+#custom-inline .native-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#custom-inline a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+}
+
+#custom-inline a:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
+#custom-inline .native-img {
+  position: absolute;
+  left: -21px;
+  box-sizing: content-box;
+  margin: 0;
+  padding: 8px;
+  height: 18px;
+  border: solid 4px #f0f0f0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 2px hsla(0, 0%, 0%, .2);
+}
+
+#custom-inline .native-text {
+  margin-right: 10px;
+  margin-left: 32px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+#custom-inline .native-company {
+  font-weight: 600;
+}
+
+#custom-inline .native-ad {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 4px 6px;
+  border-top-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  background-color: #6e5821;
+  color: #fff;
+  font-weight: 600;
+  font-size: 9px;
+  line-height: 1;
+}
+
+    </style>
+</head>
+<body>
+    <div id="board">
+        <div id="overlay" class="" style="">
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+          <span class="plot"></span>
+         
+        </div>
+        
+        <div id="soil" class="" style="">
+        </div>
+      </div>
+      <script>
+        // Given a 5 by 4 grid of objects 
+        // Either place item 1 and then maybe 2 before place everything randomly... o
+
+        // Box = object
+        //var output = "num:"+num+" roll:"+roll+" result:"+yourNumber;
+        var ocontainer = document.getElementById('ocontainer');
+
+
+        var soil = document.getElementById('soil');
+        let x = 20;
+        let text = "";  
+         var array = [
+                1,
+                2,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3,
+                3
+            ];
+        for (let i = 0; i < x; i++) {
+            // While i is less than 20 increment and loop through to build out the reward table
+           
+            // var array = [1,2,3];
+            // Types of rewards...
+            var num = Math.floor(Math.random() * array.length);
+            // Random nuber in the array...
+            // Remove that from the array
+            var roll = array.splice(num, 1);
+            // First entry of roll is our number?
+            var yourNumber = roll[ 0 ];
+            text += "<span class='plot plot-"+yourNumber+"'>"+yourNumber+"</span>";
+        }
+
+        soil.innerHTML = text;
+      </script>
+</body>
+</html>
