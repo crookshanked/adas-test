@@ -9,7 +9,7 @@
 
 #board {
   /* position: sticky; */
-  top: 1em;
+  /* top: 1em;
   width: 50vw;
   height: 50vw;
   min-width: 300px;
@@ -18,9 +18,12 @@
   max-height: calc(100vh - 2em);
   overflow: hidden;
   border: 12px solid #000;
-  border-radius: 12px;
+  border-radius: 12px; */
+  /* width:300px;
+  height:200px;
+  position: relative; */
 }
-
+.set,
 #garden,
 #plants,
 #soil,
@@ -28,11 +31,11 @@
   display: grid;
   grid-template-rows: 25% 25% 25% 25%;
   grid-template-columns: 20% 20% 20% 20% 20%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  /* position: absolute; */
+  /* top: 0; */
+  /* left: 0; */
+  /* width: 100%; */
+  /* height: 100%; */
 }
 
 #plants {
@@ -46,26 +49,26 @@
 #soil .plot
 {
     text-align: center;
-    padding-top:10vh;
+    /* padding-top:10vh; */
     font-size:2em;
     /* padding-bottom:5vh; */
 }
 .plot-1
 {
-    color:green;
+    color:darkblue;
 }
 .plot-2
 {
-    color:blue;
+    color:red;
 }
 .plot-3
 {
-    color:red;
+    color:green;
 }
 .plot {
   width: 100%;
   height: 100%;
-  background-color: #222;
+  /* background-color: #222; */
   /* background-color: #836B32; */
   /* background-image: url('../images/dirt.svg'); */
   background-size: calc(10vw - 4px);
@@ -341,98 +344,56 @@
     </style>
 </head>
 <body>
-    <div id="board">
-        <div id="overlay" class="" style="">
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-          <span class="plot"></span>
-         
-        </div>
-        
-        <div id="soil" class="" style="">
-        </div>
-      </div>
+    <div id="board"> 
+    </div>
+      
       <script>
-        // Given a 5 by 4 grid of objects 
-        // Either place item 1 and then maybe 2 before place everything randomly... o
-
-        // Box = object
-        //var output = "num:"+num+" roll:"+roll+" result:"+yourNumber;
-        var ocontainer = document.getElementById('ocontainer');
-
-
-        var soil = document.getElementById('soil');
-        let x = 20;
-        let text = "";  
-         var array = [
-                1,
-                2,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3,
-                3
-            ];
-        for (let i = 0; i < x; i++) {
-            // While i is less than 20 increment and loop through to build out the reward table
-           
-            // var array = [1,2,3];
-            // Types of rewards...
-            var num = Math.floor(Math.random() * array.length);
-            // Random nuber in the array...
-            // Remove that from the array
-            var roll = array.splice(num, 1);
-            // First entry of roll is our number?
-            var yourNumber = roll[ 0 ];
-            text += "<span class='plot plot-"+yourNumber+"'>"+yourNumber+"</span>";
+        var soil = document.getElementById('board');
+        let textarray = "";
+        var array = [
+                  1,
+                  2,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3,
+                  3
+              ];
+        for (let j = 1; j < 3; j++) {
+          let x = 20;
+          textarray += "<div class='set' id='set-"+j+"'>";
+          let text = "";  
+          
+          for (let i = 0; i < x; i++) {
+              // While i is less than 20 increment and loop through to build out the reward table
+              text = "";
+              // var array = [1,2,3];
+              // Types of rewards...
+              var num = Math.floor(Math.random() * array.length);
+              // Random nuber in the array...
+              // Remove that from the array
+              var roll = array.splice(num, 1);
+              // First entry of roll is our number?
+              var yourNumber = roll[ 0 ];
+              text += "<span class='plot plot-"+yourNumber+"'>"+yourNumber+"</span>";
+              textarray += text;
+          }
+          textarray += "</div>";
         }
-
-        soil.innerHTML = text;
+        soil.innerHTML = textarray;
       </script>
 </body>
 </html>
